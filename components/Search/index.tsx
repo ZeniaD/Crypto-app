@@ -42,7 +42,6 @@ const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showS
     } else if (e.key === "Enter") {
       const selectedCoin: Coin = coinResults[selectedIndex];
       handleClick(selectedCoin);
-      setCoinSearch(selectedCoin.name)
       setShowDropdown(false);
     }
   };
@@ -51,9 +50,8 @@ const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showS
     setSelectedIndex(index);
   };
 
-  const handleButtonClick = (id: string) => {
+  const handleButtonClick = (coin: Coin) => {
     setShowDropdown(false);
-    const coin: Coin = coins.find((coin: Coin) => coin.id === id)!;
     handleClick(coin);
   }
 
@@ -82,7 +80,7 @@ const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showS
                 {coin.name}
               </Link>
               :
-              <button onClick={() => handleButtonClick(coin.id)} {...commonProps}>
+              <button onClick={() => handleButtonClick(coin)} {...commonProps}>
                 {coin.name}
               </button>
           })}
