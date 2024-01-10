@@ -8,12 +8,13 @@ import Logo from "@/public/logo.svg";
 import HomeIcon from "@/public/home.svg";
 import StackOutline from "@/public/stackOutline.svg";
 import {useRouter} from "next/navigation";
+import {Coin} from "@/types";
 
 const NavBar = () => {
   const router = useRouter();
 
-  const handleClick = (id: string) => {
-    router.push(`/coin/${id}`);
+  const handleClick = (coin: Coin) => {
+    router.push(`/coin/${coin.id}`);
   }
 
   return (
