@@ -8,8 +8,7 @@ import {Coin} from "@/types";
 
 const AddAssetModal = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedCoin, setSelectedCoin] = useState<string>('');
-  const [image, setImage] = useState<string>('');
+  const [selectedCoin, setSelectedCoin] = useState<Coin | null>(null);
   const [amount, setAmount] = useState<number>(1);
   const [date, setDate] = useState<string>('');
   const [invalidCoin, setInvalidCoin] = useState<boolean>(false);
@@ -21,8 +20,8 @@ const AddAssetModal = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (selectedCoin ==='' || amount === 0)  {
-      if (selectedCoin ==='') {
+    if (!selectedCoin || amount === 0)  {
+      if (!selectedCoin) {
         setInvalidCoin(true);
         setTimeout(() => {
           setInvalidCoin(false);
@@ -43,8 +42,7 @@ const AddAssetModal = () => {
   }
 
   const handleClick = (coin: Coin) => {
-    setSelectedCoin(coin.id);
-    setImage(coin.image);
+    setSelectedCoin(coin);
   }
 
   const handleDateChange = (dateValue: string) => {
@@ -69,13 +67,13 @@ const AddAssetModal = () => {
             <h2 className="mb-4 text-lg">Select Coin</h2>
             <div className="flex h-full">
               <div className="w-1/3 bg-blackberry mr-6 flex items-center justify-center rounded-md flex-col">
-                {!image && !selectedCoin && <p>No coin selected</p>}
-                {image && selectedCoin && (
+                {!selectedCoin && <p>No coin selected</p>}
+                {!!selectedCoin && (
                   <>
                     <div className="p-4 rounded-md bg-[#2C2C4A]">
-                      <Image src={image} alt={selectedCoin} width={32} height={32}/>
+                      <Image src={selectedCoin.image} alt={selectedCoin.name} width={32} height={32}/>
                     </div>
-                    <p className="mt-2 text-xl capitalize">{selectedCoin}</p>
+                    <p className="mt-2 text-xl capitalize">{selectedCoin.name} <span className="uppercase">({selectedCoin.symbol})</span></p>
                   </>
                 )}
               </div>
