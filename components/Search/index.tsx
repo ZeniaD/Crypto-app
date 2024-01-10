@@ -4,16 +4,14 @@ import SearchIcon from "@/public/search.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from 'next/navigation'
 import { Coin } from "@/types";
 import useClickOutside from "@/utils/useClickOutside";
 
-const Search = () => {
+const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showSearchIcon: boolean, inputPlaceholder: string, isLink: boolean, handleClick: (id: string) => void}) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [coins, setCoins] = useState<Coin[] | []>([]);
   const [coinSearch, setCoinSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const router = useRouter();
   const searchRef = useClickOutside(() => setShowDropdown(false));
 
   const getCoins = async () => {
@@ -43,7 +41,7 @@ const Search = () => {
       setSelectedIndex(newIndex);
     } else if (e.key === "Enter") {
       const selectedCoin: Coin = coinResults[selectedIndex];
-      router.push(`/coin/${selectedCoin.id}`)
+      handleClick(selectedCoin.id);
       setShowDropdown(false);
     }
   };
@@ -52,12 +50,17 @@ const Search = () => {
     setSelectedIndex(index);
   };
 
+  const handleButtonClick = (id: string) => {
+    setShowDropdown(false);
+    handleClick(id);
+  }
+
   const coinResults: Coin[] = coins.filter((coin: Coin) => coin.name.toLowerCase().includes(coinSearch.toLowerCase()));
 
   return (
     <div className="relative" ref={searchRef}>
-      <SearchIcon className="absolute top-1/2 -translate-y-1/2 left-3 dark:fill-[#D1D1D6] fill-indigo"/>
-      <input placeholder="Search..."
+      {showSearchIcon && <SearchIcon className="absolute top-1/2 -translate-y-1/2 left-3 dark:fill-[#D1D1D6] fill-indigo"/>}
+      <input placeholder={inputPlaceholder}
              className="dark:bg-blackberry bg-lilac placeholder:text-indigo dark:placeholder:text-white py-3 pl-10 pr-3 border border-1 dark:border-[#232336] border-lilac rounded-md focus:outline-none min-w-[250px]"
              onChange={handleSearchChange}
              onFocus={() => setShowDropdown(true)}
@@ -66,14 +69,21 @@ const Search = () => {
       />
       {showDropdown && (
         <div className="max-h-[300px] inline-flex flex-col overflow-y-scroll dark:bg-blackberry bg-white absolute z-10 left-0 top-[55px] border border-1 dark:border-[#232336] border-lilac rounded-md min-w-[250px]">
-          {coinResults.map((coin, index) => (
-            <Link href={`/coin/${coin.id}`} key={coin.id}
-                  className={`px-4 py-2 flex gap-2 ${index === selectedIndex && 'bg-grape'}`}
-                  onClick={() => setShowDropdown(false)}
-                  onMouseEnter={() => handleMouseEnter(index)}>
-              {coin.name}
-            </Link>
-          ))}
+          {coinResults.map((coin, index) => {
+            const commonProps = {
+              key: coin.id,
+              className: `px-4 py-2 flex gap-2 ${index === selectedIndex && 'bg-grape'}`,
+              onMouseEnter: () => handleMouseEnter(index),
+            };
+            return isLink ?
+              <Link href={`/coin/${coin.id}`} onClick={() => setShowDropdown(false)} {...commonProps}>
+                {coin.name}
+              </Link>
+              :
+              <button onClick={() => handleButtonClick(coin.id)} {...commonProps}>
+                {coin.name}
+              </button>
+          })}
         </div>
       )}
     </div>

@@ -1,3 +1,5 @@
+'use client'
+
 import Link from "next/link";
 import Search from "@/components/Search";
 import CurrencySelector from "@/components/CurrencySelector";
@@ -5,8 +7,15 @@ import ThemeToggle from "@/components/ThemeToggle";
 import Logo from "@/public/logo.svg";
 import HomeIcon from "@/public/home.svg";
 import StackOutline from "@/public/stackOutline.svg";
+import {useRouter} from "next/navigation";
 
 const NavBar = () => {
+  const router = useRouter();
+
+  const handleClick = (id: string) => {
+    router.push(`/coin/${id}`);
+  }
+
   return (
     <div className="py-6 px-2 flex justify-center items-center bg-white dark:bg-transparent">
       <div className="max-w-[1296px] w-full flex justify-between">
@@ -27,7 +36,7 @@ const NavBar = () => {
         </div>
 
         <div className="flex">
-          <Search />
+          <Search showSearchIcon={true} inputPlaceholder="Search..." isLink={true} handleClick={handleClick}/>
           <CurrencySelector />
           <ThemeToggle />
         </div>
