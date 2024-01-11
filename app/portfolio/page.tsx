@@ -1,4 +1,5 @@
 import AddAssetModal from "@/components/AddAssetModal";
+import PortfolioTable from "@/components/PortfolioTable";
 
 const Portfolio = () => {
   return (
@@ -7,6 +8,7 @@ const Portfolio = () => {
         <h1 className="text-2xl">Your Portfolio</h1>
         <AddAssetModal/>
       </div>
+      <PortfolioTable/>
     </div>
   )
 }

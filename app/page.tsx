@@ -1,12 +1,23 @@
 "use client"
 
-import {useState} from "react";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "@/redux/store";
+import { getAllCoinsMarketData } from "@/redux/features/coinMarketSlice";
 import CoinCharts from "@/components/CoinCharts";
 import CoinsTable from "../components/CoinsTable";
 import Converter from "@/components/Converter";
 
 const Home = () => {
   const [showConverter, setShowConverter] = useState(false);
+  const dispatch: AppDispatch = useDispatch();
+  const { allCoinsList} = useAppSelector(state => state.coins);
+
+  useEffect(() => {
+    if (!allCoinsList.length) {
+      dispatch(getAllCoinsMarketData());
+    }
+  }, []);
 
   return (
     <div className="px-2 pb-14 pt-5 max-w-[1296px] w-full mx-auto">

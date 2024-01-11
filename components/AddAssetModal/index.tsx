@@ -1,12 +1,17 @@
 "use client"
 
 import { useState } from "react";
-import useClickOutside from "@/utils/useClickOutside";
-import Search from "@/components/Search";
+import { useDispatch } from "react-redux";
 import Image from "next/image";
-import {Coin} from "@/types";
+import { AppDispatch } from "@/redux/store";
+import { addPortfolio } from "@/redux/features/potfolioSlice";
+import Search from "@/components/Search";
+import useClickOutside from "@/utils/useClickOutside";
+import { Coin } from "@/types";
+
 
 const AddAssetModal = () => {
+  const dispatch: AppDispatch = useDispatch();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedCoin, setSelectedCoin] = useState<Coin | null>(null);
   const [amount, setAmount] = useState<number>(1);
@@ -38,6 +43,16 @@ const AddAssetModal = () => {
       return;
     }
 
+    const newPortfolio = {
+      id: selectedCoin.id,
+      date,
+      amount
+    }
+
+    dispatch(addPortfolio(newPortfolio));
+    setSelectedCoin(null);
+    setAmount(1);
+    setDate('');
     setShowModal(false);
   }
 
@@ -56,6 +71,13 @@ const AddAssetModal = () => {
         setInvalidDate(false);
       }, 5000);
     }
+  }
+
+  const handleCancel = () => {
+    setSelectedCoin(null);
+    setAmount(1);
+    setDate('');
+    setShowModal(false);
   }
 
   return (
@@ -94,7 +116,7 @@ const AddAssetModal = () => {
                 <div className="mt-4">
                   <button
                     className="bg-[#232336] mr-4 p-2 rounded-md min-w-[200px] text-center"
-                    onClick={() => setShowModal(false)}>Cancel</button>
+                    onClick={handleCancel}>Cancel</button>
                   <button type="submit" className="bg-[#7878FA] p-2 rounded-md min-w-[200px] text-center">Save</button>
                 </div>
               </div>
