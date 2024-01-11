@@ -1,7 +1,6 @@
-
-import { Portfolio, Coin } from "@/types";
 import Image from "next/image";
 import CurrencyIcon from "@/components/CurrencyIcon";
+import { Portfolio, Coin } from "@/types";
 
 const PortfolioItem = ({portfolio, portfolioCoins, currency} : {portfolio: Portfolio, portfolioCoins: Coin[], currency: string}) => {
   const coinData: Coin = portfolioCoins.find((item) => item.id === portfolio.id)!;
