@@ -11,6 +11,7 @@ interface GetCoinMarketDataArgs {
 
 interface CoinMarketData {
   coins: Coin[];
+  allCoinsList: Coin[];
   loading: string;
   hasError: boolean;
   currentPage: number;
@@ -18,6 +19,7 @@ interface CoinMarketData {
 
 const initialState: CoinMarketData = {
   coins: [],
+  allCoinsList: [],
   loading: 'idle',
   hasError: false,
   currentPage: 1
@@ -33,6 +35,15 @@ export const getCoinMarketData = createAsyncThunk('coinMarket/getCoinMarketData'
   }
 });
 
+export const getAllCoinsMarketData = createAsyncThunk('coinMarket/getAllCoinsMarketData',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false&locale=en');
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  });
 
 const coinMarketData = createSlice({
   name: "global",
@@ -50,6 +61,19 @@ const coinMarketData = createSlice({
         state.currentPage += 1;
       })
       .addCase(getCoinMarketData.rejected, (state, action) => {
+        state.loading = "rejected";
+        state.hasError = true;
+        console.error("API call failed with error:", action.payload);
+      })
+      .addCase(getAllCoinsMarketData.pending, (state) => {
+        state.loading = "pending";
+        state.hasError = false;
+      })
+      .addCase(getAllCoinsMarketData.fulfilled, (state, action) => {
+        state.allCoinsList = [...action.payload];
+        state.loading = "fulfilled";
+      })
+      .addCase(getAllCoinsMarketData.rejected, (state, action) => {
         state.loading = "rejected";
         state.hasError = true;
         console.error("API call failed with error:", action.payload);

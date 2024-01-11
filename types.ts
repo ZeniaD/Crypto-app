@@ -167,3 +167,9 @@ export interface CoinInfo {
   status_updates: string[];
   last_updated: string;
 }
+
+export interface Portfolio {
+  id: string;
+  date: string;
+  amount: number;
+}

@@ -1,33 +1,19 @@
 "use client"
 
 import SearchIcon from "@/public/search.svg";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import Link from "next/link";
+import { useAppSelector } from "@/redux/store";
 import { Coin } from "@/types";
 import useClickOutside from "@/utils/useClickOutside";
 
 const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showSearchIcon: boolean, inputPlaceholder: string, isLink: boolean, handleClick: (coin: Coin) => void}) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [coins, setCoins] = useState<Coin[] | []>([]);
   const [coinSearch, setCoinSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const searchRef = useClickOutside(() => setShowDropdown(false));
+  const { allCoinsList: coins, hasError } = useAppSelector(state => state.coins);
 
-  const getCoins = async () => {
-    try {
-      const { data } = await axios("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false&locale=en");
-      setCoins(data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  useEffect(() => {
-    if(!coins.length) {
-      getCoins();
-    }
-  }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCoinSearch(e.target.value);
@@ -56,6 +42,7 @@ const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showS
   }
 
   const coinResults: Coin[] = coins.filter((coin: Coin) => coin.name.toLowerCase().includes(coinSearch.toLowerCase()));
+  const hasCoins: boolean = coins.length > 0 && !hasError;
 
   return (
     <div className="relative" ref={searchRef}>
@@ -67,7 +54,7 @@ const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showS
              value={coinSearch}
              onKeyDown={handleKeyDown}
       />
-      {showDropdown && (
+      {showDropdown && hasCoins && (
         <div className="max-h-[300px] inline-flex flex-col overflow-y-scroll dark:bg-blackberry bg-white absolute z-10 left-0 top-[55px] border border-1 dark:border-[#232336] border-lilac rounded-md min-w-[250px]">
           {coinResults.map((coin, index) => {
             const commonProps = {
