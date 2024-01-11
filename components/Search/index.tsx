@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Coin } from "@/types";
 import useClickOutside from "@/utils/useClickOutside";
 
-const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showSearchIcon: boolean, inputPlaceholder: string, isLink: boolean, handleClick: (id: string) => void}) => {
+const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showSearchIcon: boolean, inputPlaceholder: string, isLink: boolean, handleClick: (coin: Coin) => void}) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [coins, setCoins] = useState<Coin[] | []>([]);
   const [coinSearch, setCoinSearch] = useState('');
@@ -41,7 +41,7 @@ const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showS
       setSelectedIndex(newIndex);
     } else if (e.key === "Enter") {
       const selectedCoin: Coin = coinResults[selectedIndex];
-      handleClick(selectedCoin.id);
+      handleClick(selectedCoin);
       setShowDropdown(false);
     }
   };
@@ -50,9 +50,9 @@ const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showS
     setSelectedIndex(index);
   };
 
-  const handleButtonClick = (id: string) => {
+  const handleButtonClick = (coin: Coin) => {
     setShowDropdown(false);
-    handleClick(id);
+    handleClick(coin);
   }
 
   const coinResults: Coin[] = coins.filter((coin: Coin) => coin.name.toLowerCase().includes(coinSearch.toLowerCase()));
@@ -61,7 +61,7 @@ const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showS
     <div className="relative" ref={searchRef}>
       {showSearchIcon && <SearchIcon className="absolute top-1/2 -translate-y-1/2 left-3 dark:fill-[#D1D1D6] fill-indigo"/>}
       <input placeholder={inputPlaceholder}
-             className="dark:bg-blackberry bg-lilac placeholder:text-indigo dark:placeholder:text-white py-3 pl-10 pr-3 border border-1 dark:border-[#232336] border-lilac rounded-md focus:outline-none min-w-[250px]"
+             className="dark:bg-blackberry bg-lilac placeholder:text-indigo dark:placeholder:text-white py-3 pl-10 pr-3 border border-1 dark:border-[#232336] border-lilac rounded-md focus:outline-none min-w-[250px] w-full"
              onChange={handleSearchChange}
              onFocus={() => setShowDropdown(true)}
              value={coinSearch}
@@ -80,7 +80,7 @@ const Search = ({showSearchIcon, inputPlaceholder, isLink, handleClick} : {showS
                 {coin.name}
               </Link>
               :
-              <button onClick={() => handleButtonClick(coin.id)} {...commonProps}>
+              <button onClick={() => handleButtonClick(coin)} {...commonProps}>
                 {coin.name}
               </button>
           })}
