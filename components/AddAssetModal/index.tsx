@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
+import { uid } from "uid";
 import { AppDispatch } from "@/redux/store";
 import { addPortfolio } from "@/redux/features/potfolioSlice";
 import Search from "@/components/Search";
 import useClickOutside from "@/utils/useClickOutside";
 import { Coin } from "@/types";
-
+import convertDateFormat from "@/utils/convertDateFormat";
 
 const AddAssetModal = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -44,8 +45,9 @@ const AddAssetModal = () => {
     }
 
     const newPortfolio = {
-      id: selectedCoin.id,
-      date,
+      id: uid(),
+      coinId: selectedCoin.id,
+      date: convertDateFormat(date),
       amount
     }
 
@@ -84,7 +86,7 @@ const AddAssetModal = () => {
     <>
       <button onClick={() => setShowModal(!showModal)} className="bg-[#7878FA] p-2 rounded-md min-w-[200px] text-center">Add Asset</button>
       {showModal && (
-        <div className="w-full h-full flex justify-center items-center absolute left-0 top-0 bg-[#26243752] backdrop-blur-sm">
+        <div className="w-full h-full flex justify-center items-center absolute left-0 top-0 bg-[#26243752] backdrop-blur-sm z-20">
           <form className="dark:bg-[#13121A] bg-indigo min-w-[50%] min-h-[300px] rounded-3xl p-8" ref={modalRef} onSubmit={handleSubmit}>
             <h2 className="mb-4 text-lg">Select Coin</h2>
             <div className="flex h-full">
