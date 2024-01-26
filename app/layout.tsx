@@ -8,8 +8,8 @@ import './globals.css'
 const inter = Inter({subsets: ['latin']})
 
 export const metadata: Metadata = {
-  title: 'Crypto App',
-  description: 'Crypto App',
+  title: 'CryptoCraze',
+  description: 'CryptoCraze',
 }
 
 const RootLayout = ({children}: { children: React.ReactNode }) => {

@@ -29,7 +29,7 @@ const initialState: selectedCoinState = {
 export const getCoinData = createAsyncThunk('coinData/getCoinData',
   async ({ currency, timeStamp, coinId }: GetCoinDataArgs, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currency}&days=${timeStamp}`);
+      const { data } = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currency}&days=${timeStamp}&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`);
       const { prices, total_volumes } = data;
 
       const timeFormattedPrices = prices.map((item: string) => [formatTime(item[0], timeStamp), item[1]]);
@@ -54,7 +54,7 @@ export const getAllCoinsData = createAsyncThunk('coinData/getAllCoinsData',
       const timeStamp: string = state.selectedCoins.timeStamp;
 
       const coinDataPromises = state.selectedCoins.selectedCoins.map(async (coin: CoinData) => {
-        const { data } = await axios.get(`https://api.coingecko.com/api/v3/coins/${coin.id}/market_chart?vs_currency=${currency}&days=${timeStamp}`);
+        const { data } = await axios.get(`https://api.coingecko.com/api/v3/coins/${coin.id}/market_chart?vs_currency=${currency}&days=${timeStamp}&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_API_KEY}`);
         const { prices, total_volumes } = data;
 
         const timeFormattedPrices = prices.map((item: string) => [formatTime(item[0], timeStamp), item[1]]);

@@ -22,7 +22,7 @@ const NavBar = () => {
       <div className="max-w-[1296px] w-full flex justify-between">
         <div className="flex items-center">
           <Logo/>
-          <span className="ml-2 text-xl text-indigo dark:text-white font-bold">Logoipsum</span>
+          <span className="ml-2 text-xl text-indigo dark:text-white font-bold">CryptoCraze</span>
         </div>
 
         <div className="flex">
